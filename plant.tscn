@@ -1,0 +1,6 @@
+[gd_scene format=3 uid="uid://davkppavapm57"]
+
+[ext_resource type="Script" uid="uid://crl2wmviu3jpx" path="res://procedural_plant_nase.gd" id="1_t03al"]
+
+[node name="Plant" type="Node3D" unique_id=148196843]
+script = ExtResource("1_t03al")
