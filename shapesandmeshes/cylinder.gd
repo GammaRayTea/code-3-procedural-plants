@@ -165,10 +165,10 @@ func connect_circles(_top_verts:PackedVector3Array, _bottom_verts:PackedVector3A
 		#normals
 
 		var bot_normal =_bottom_verts[0].direction_to(_bottom_verts[i+1]) 
-
 		bot_normals.push_back(bot_normal)
 		var top_normal = _top_verts[0].direction_to(_top_verts[i+1]) 
 		top_normals.push_back(top_normal)
+
 
 		
 	normals.append_array(top_normals)
