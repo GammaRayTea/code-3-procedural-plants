@@ -1,0 +1,14 @@
+[gd_resource type="ShaderMaterial" format=3 uid="uid://ciess7rosdrv7"]
+
+[ext_resource type="Shader" uid="uid://22bii6lweoom" path="res://leaves/wind_leaves.gdshader" id="1_5yo34"]
+[ext_resource type="Texture2D" uid="uid://7yijiukkectb" path="res://leaves/leafbranch.png" id="2_cvq77"]
+
+[resource]
+render_priority = 0
+shader = ExtResource("1_5yo34")
+shader_parameter/wind_direction = Vector3(1, 1, 0)
+shader_parameter/wind_strength = 1.1
+shader_parameter/wind_distance_mod = 0.7
+shader_parameter/speed = 1.0
+shader_parameter/uv_scale = Vector2(1, 1)
+shader_parameter/color_texture = ExtResource("2_cvq77")

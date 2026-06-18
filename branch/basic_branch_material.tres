@@ -1,0 +1,13 @@
+[gd_resource type="ShaderMaterial" format=3 uid="uid://cme552t3osk43"]
+
+[ext_resource type="Shader" uid="uid://ch633kmmfjyyb" path="res://branch/wind.gdshader" id="1_mhwci"]
+[ext_resource type="Texture2D" uid="uid://cds6ksry6ccfj" path="res://branch/Bark014_1K-JPG_Color.jpg" id="2_nejhv"]
+
+[resource]
+render_priority = 0
+shader = ExtResource("1_mhwci")
+shader_parameter/wind_direction = Vector3(1, 1, 0)
+shader_parameter/wind_strength = 1.1
+shader_parameter/speed = 1.0
+shader_parameter/uv_scale = Vector2(1, 30)
+shader_parameter/color_texture = ExtResource("2_nejhv")

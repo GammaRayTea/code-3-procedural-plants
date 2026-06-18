@@ -1,0 +1,36 @@
+[gd_scene format=3 uid="uid://cw73v70ovby6a"]
+
+[ext_resource type="Script" uid="uid://cgdxpqsdcwvs6" path="res://leaves/basic_leaves.gd" id="1_36emm"]
+[ext_resource type="Shader" uid="uid://22bii6lweoom" path="res://leaves/wind_leaves.gdshader" id="2_firj3"]
+[ext_resource type="Texture2D" uid="uid://7yijiukkectb" path="res://leaves/leafbranch.png" id="3_6x4t5"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_firj3"]
+render_priority = 0
+shader = ExtResource("2_firj3")
+shader_parameter/wind_direction = Vector3(1, 1, 0)
+shader_parameter/wind_strength = 1.1
+shader_parameter/wind_distance_mod = 0.984
+shader_parameter/speed = 1.0
+shader_parameter/uv_scale = Vector2(1, 1)
+shader_parameter/color_texture = ExtResource("3_6x4t5")
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_kpvxy"]
+material = SubResource("ShaderMaterial_firj3")
+orientation = 2
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_udmuc"]
+material = SubResource("ShaderMaterial_firj3")
+orientation = 0
+
+[node name="BasicLeaves" type="Node3D" unique_id=866701054 node_paths=PackedStringArray("mesh1", "mesh2")]
+script = ExtResource("1_36emm")
+mesh1 = NodePath("1")
+mesh2 = NodePath("2")
+
+[node name="1" type="MeshInstance3D" parent="." unique_id=1013265876]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+mesh = SubResource("PlaneMesh_kpvxy")
+
+[node name="2" type="MeshInstance3D" parent="." unique_id=1001038785]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.004564047, 1, 0.0057406425)
+mesh = SubResource("PlaneMesh_udmuc")

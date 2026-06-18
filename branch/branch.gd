@@ -26,6 +26,14 @@ var base_wind_effect:float = 0.0
 
 ##Material for branch and all it's children
 @export var branch_material: Material
+
+@export_category("Leaves")
+##base scene for leaves
+@export var leaves_scene:PackedScene
+##Material for leaves
+@export var leaves_material:Material
+@export var enable_leaves:bool = false
+
 @export_category("Growth")
 ## Direction to which branches will orient themselves towards 
 @export var growth_direction: Vector3 = Vector3(0,1,0)
@@ -214,13 +222,14 @@ func generate() -> void:
 	#generate child branches
 	if recursion_level>0:
 		generate_child_branches(recursion_level,segments_with_child_branch)
-	
+	elif enable_leaves :
+		generate_leaves(segments_with_child_branch)
 	#add surface
 	finalize_branch_surface(branch_mesh_arrays)
 
 
 
-
+#generate child branches
 func generate_child_branches(_recursion_level:int, _at_segments:Array[int]):
 
 
@@ -230,7 +239,7 @@ func generate_child_branches(_recursion_level:int, _at_segments:Array[int]):
 		#Branch params
 		var bot_rad =segments[max(  0, (_at_segments[i]) )].top_radius*0.4
 		var branch_height = child_branch_properties[0].length_modifier * child_branch_lengths.sample(distance_along_length)
-		
+		var wind_influence = base_wind_effect + distance_along_length*(1.0 - base_wind_effect)
 		
 		
 		#Create branch
@@ -239,29 +248,50 @@ func generate_child_branches(_recursion_level:int, _at_segments:Array[int]):
 		branch.child_branch_distribution = child_branch_distribution
 		branch.child_branch_lengths = child_branch_lengths
 		branch.branch_material = branch_material
-		branch.base_wind_effect = base_wind_effect + distance_along_length*(1.0 - base_wind_effect)
-		
-		
-		#Branch transform
-		branch.transform.origin = segments[_at_segments[i]].circle_center
-		
-		#angle around parent
-		#var angle =2.0*PI* (float(_at_segments[i])/vertical_segments)
-		var angle =2.0*PI* rng.randf_range(0,1)
-		var rot_vec = Vector3(cos(angle),0 , -sin(angle))
-		rot_vec = rot_vec * (segments[_at_segments[i]].segment_transform as Transform3D)
-		
-		
-		#angle toward growth direction
-		rot_vec = rot_vec.move_toward(growth_direction,growth_force)
-
-		#apply angle
-		branch.rotation = rot_vec
-		
+		branch.leaves_material= leaves_material
+		branch.base_wind_effect = wind_influence
+		branch.growth_direction = growth_direction
+		branch.growth_force = growth_force
+		branch.enable_leaves = enable_leaves
+		#transform
+		set_child_transform(branch,_at_segments[i])
 		#Add branch to scene
 		add_child(branch)
 		branch.owner = self
 		branch.generate()
+
+func generate_leaves( _at_segments:Array[int]) ->void:
+	for i in range(_at_segments.size()):
+		var distance_along_length  = float(_at_segments[i])/vertical_segments
+		var wind_influence = base_wind_effect + distance_along_length*(1 - base_wind_effect)
+		
+		
+
+		var leaves:BasicLeaves = load("res://leaves/basic_leaves.tscn").instantiate(PackedScene.GEN_EDIT_STATE_INSTANCE)
+		leaves.apply_material(leaves_material.duplicate(),wind_influence)
+		set_child_transform(leaves,_at_segments[i])
+		add_child(leaves)
+		leaves.set_owner( self)
+		
+		
+
+func set_child_transform(object:Node3D,segment_id:int):
+	#position transform
+	object.transform.origin = segments[segment_id].circle_center
+	
+	#angle around parent
+	#var angle =2.0*PI* (float(_at_segments[i])/vertical_segments)
+	var angle =2.0*PI* rng.randf_range(0,1)
+	var rot_vec = Vector3(cos(angle),0 , -sin(angle))
+	rot_vec = rot_vec * (segments[segment_id].segment_transform as Transform3D)
+	
+	
+	#angle toward growth direction
+	rot_vec = rot_vec.move_toward(growth_direction,growth_force)
+
+	#apply angle
+	object.rotation = rot_vec
+	
 
 #generate mesh based on 2 circles
 func generate_segment( _bottom_circle:Array, _top_circle:Array,_distance_along_length:float, _top_index_offset:int, _bottom_index_offset:int):

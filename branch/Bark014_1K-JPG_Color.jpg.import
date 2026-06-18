@@ -3,7 +3,7 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://cds6ksry6ccfj"
-path.s3tc="res://.godot/imported/Bark014_1K-JPG_Color.jpg-d7ee8578ef8dfdf043dd8b78c877582b.s3tc.ctex"
+path.s3tc="res://.godot/imported/Bark014_1K-JPG_Color.jpg-f608fa3a714263a0368fb9c2310c872a.s3tc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc"],
 "vram_texture": true
@@ -11,8 +11,8 @@ metadata={
 
 [deps]
 
-source_file="res://Bark014_1K-JPG_Color.jpg"
-dest_files=["res://.godot/imported/Bark014_1K-JPG_Color.jpg-d7ee8578ef8dfdf043dd8b78c877582b.s3tc.ctex"]
+source_file="res://branch/Bark014_1K-JPG_Color.jpg"
+dest_files=["res://.godot/imported/Bark014_1K-JPG_Color.jpg-f608fa3a714263a0368fb9c2310c872a.s3tc.ctex"]
 
 [params]
 
