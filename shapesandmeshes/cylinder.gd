@@ -80,7 +80,7 @@ func generate() -> void:
 	side_arrays = []
 	side_arrays.resize(Mesh.ARRAY_MAX)
 	
-	var sides = connect_circles(top_circle[0],bottom_circle[0])
+	var sides = connect_circles(top_circle[0],bottom_circle[0], Color(1,1,1,1))
 	
 	side_arrays[Mesh.ARRAY_VERTEX] = sides[0]
 	side_arrays[Mesh.ARRAY_INDEX] = sides[1]
@@ -101,6 +101,7 @@ func make_circle(_height:float,_radius:float, _facing_up:bool =true ):
 	var verts = PackedVector3Array()
 	var indices = PackedInt32Array()
 	var normals = PackedVector3Array()
+	var uv = PackedVector2Array()
 	#print(_height)
 	
 	var segment_angle = deg_to_rad(360)/radial_segments
@@ -137,15 +138,17 @@ func make_circle(_height:float,_radius:float, _facing_up:bool =true ):
 	if !_facing_up :
 		indices.reverse()
 	#print(verts.size()," indices: ", indices.size(), " normals: ",normals.size())
-	return [verts, indices, normals]
+	return [verts, indices, normals, uv]
 
 
-func connect_circles(_top_verts:PackedVector3Array, _bottom_verts:PackedVector3Array):
+func connect_circles(_top_verts:PackedVector3Array, _bottom_verts:PackedVector3Array, _color:Color, _top_index_offset:int = 0,_bottom_index_offset:int = 0, _distance_along_length:float = 0.0):
 	var verts = PackedVector3Array()
 	var normals = PackedVector3Array()
 	var indices = PackedInt32Array()
-	verts.append_array(_top_verts.slice(1))
+	var colors = PackedColorArray()
+	var uvs = PackedVector2Array()
 	verts.append_array(_bottom_verts.slice(1))
+	verts.append_array(_top_verts.slice(1))
 	
 	var top_normals =  PackedVector3Array()
 	var bot_normals =  PackedVector3Array()
@@ -153,14 +156,15 @@ func connect_circles(_top_verts:PackedVector3Array, _bottom_verts:PackedVector3A
 	for i in range(0,verts.size()/2.0):
 		
 		
-		#ids
-		indices.push_back(i)
-		indices.push_back((i+1)%top_vert_amount )
-		indices.push_back(top_vert_amount +i)
+		#indices
+		indices.push_back(_bottom_index_offset + top_vert_amount + i)
+		indices.push_back(_bottom_index_offset + top_vert_amount +((i + 1) % top_vert_amount ))
+		indices.push_back(_top_index_offset + (i + 1) % top_vert_amount)
 		
-		indices.push_back(top_vert_amount +i)
-		indices.push_back((i+1)%top_vert_amount )
-		indices.push_back(top_vert_amount  +((i+1) % top_vert_amount ))
+		indices.push_back(_top_index_offset + i)
+		indices.push_back(_bottom_index_offset + top_vert_amount + i)
+		indices.push_back(_top_index_offset + (i + 1) % top_vert_amount )
+		
 
 		#normals
 
@@ -168,11 +172,17 @@ func connect_circles(_top_verts:PackedVector3Array, _bottom_verts:PackedVector3A
 		bot_normals.push_back(bot_normal)
 		var top_normal = _top_verts[0].direction_to(_top_verts[i+1]) 
 		top_normals.push_back(top_normal)
-
-
 		
+		#Vertex Colors
+		colors.push_back(_color)
+		colors.push_back(_color)
+			
+		
+		#uvs
+		uvs.push_back(Vector2( float(i+1)/ (verts.size()/2.0), _distance_along_length))
+
 	normals.append_array(top_normals)
 	normals.append_array(bot_normals)
 
 	#print("verts: ",verts.size()," indices: ", indices.size(), " normals: ",normals.size())
-	return [verts, indices,normals]
+	return [verts,indices,normals,colors,uvs]
